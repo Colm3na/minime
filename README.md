@@ -2,11 +2,10 @@
 
 [![Build Status](https://travis-ci.org/Giveth/minime.svg?branch=master)](https://travis-ci.org/Giveth/minime)
 
-The MiniMeToken contract is a standard ERC20 token with extra functionality:
+El contrato MiniMeToken es un estándar ERC20 con algunas funcionalidades extra:
 
-### The token is easy to clone!
-
-Anybody can create a new clone token from any token using this contract with an initial distribution identical to the original token at a specified block. The address calling the `createCloneToken` function will become the token controller and the token's default settings can be specified in the function call.
+### El token es fácil de clonar!
+Cualquiera puede crear un nuevo clon del token a partir de cualquier token utilizando este contrato con una distribución inicial idéntica al token original en un bloque específico. La dirección que llama a la función `createCloneToken` se convertirá en el controlador de tokens y los ajustes predeterminados del token se pueden especificar en la llamada de función.
 
     function createCloneToken(
         string _cloneTokenName,
@@ -16,56 +15,56 @@ Anybody can create a new clone token from any token using this contract with an 
         bool _isConstant
         ) returns(address) {
 
-Once the clone token is created, it acts as a completely independent token, with it's own unique functionalities.
+Una vez creado el token de clonación, actúa como un token completamente independiente, con sus propias funcionalidades únicas.
 
-### Balance history is registered and available to be queried
+### El balance del saldo está registrado y disponible para ser consultado.
 
-All MiniMe Tokens maintain a history of the balance changes that occur during each block. Two calls are introduced to read the totalSupply and the balance of any address at any block in the past.
+Todos los MiniMe Tokens mantienen un historial de los cambios de balance que ocurren durante cada bloque. Se introducen dos llamadas para leer el totalSupply y el balance de cualquier dirección en cualquier bloque en el pasado.
 
     function totalSupplyAt(uint _blockNumber) constant returns(uint)
 
     function balanceOfAt(address _holder, uint _blockNumber) constant returns (uint)
 
-### Optional token controller
+### Controlador de tokens opcional
 
-The controller of the contract can generate/destroy/transfer tokens at its own discretion. The controller can be a regular account, but the intention is for the controller to be another contract that imposes transparent rules on the token's issuance and functionality. The Token Controller is not required for the MiniMe token to function, if there is no reason to generate/destroy/transfer tokens, the token controller can be set to 0x0 and this functionality will be disabled.
+El controlador del contrato puede generar/destruir/transferir tokens a su propia voluntad. El controlador puede ser una cuenta normal, pero la intención es que el controlador sea otro contrato que imponga reglas transparentes sobre la emisión y funcionalidad del token. El controlador de tokens no es necesario para que el token MiniMe funcione, si no hay razón para generar/destruir/transferir tokens, el controlador de tokens puede configurarse en 0x0 y esta funcionalidad se desactivará.
 
-For example, a Token Creation contract can be set as the controller of the MiniMe Token and at the end of the token creation period, the controller can be transferred to the 0x0 address, to guarantee that no new tokens will be created.
+Por ejemplo, un contrato de creación de tokens puede configurarse como controlador del token MiniMe y al final del período de creaciń de tokens, el controlador puede transferirse a la dirección 0x0, para garantizar que no se crearán nuevos tokens
 
-To create and destroy tokens, these two functions are introduced:
+Para crear y destruir tokens, se introducen estas dos funciones:
 
     function generateTokens(address _holder, uint _value) onlyController
 
     function destroyTokens(address _holder, uint _value) onlyController
 
-### The Token's Controller can freeze transfers.
+### El controlador del token puede congelar las transferencias.
 
-If transfersEnabled == false, tokens cannot be transferred by the users, however they can still be created, destroyed, and transferred by the controller. The controller can also toggle this flag.
+Si transfersEnabled == false, los tokens no pueden ser transferidos por los usuarios, sin embargo, pueden ser creados, destruidos y transferidos por el controlador. El controlador también puede cambiar esta opción.
 
     // Allows tokens to be transferred if true or frozen if false
     function enableTransfers(bool _transfersEnabled) onlyController
 
 
-## Applications
+## Aplicaciones
 
-If this token contract is used as the base token, then clones of itself can be easily generated at any given block number, this allows for incredibly powerful functionality, effectively the ability for anyone to give extra features to the token holders without having to migrate to a new contract. Some of the applications that the MiniMe token contract can be used for are:
+Si este contrato de token se usa como token base, entonces los clones de sí mismos pueden ser fácilmente generados en cualquier  número de bloque dado, esto permite una funcionalidad increíblemente poderosa, efectivamente la habilidad de cualquiera de dar características extra a los poseedores de tokens sin tener que migrar a un nuevo contrato. Algunas de las aplicaciones para las que se puede utilizar el contrato del token MiniMe son:
 
-1. Generating a voting token that is burned when you vote.
-2. Generating a discount "coupon" that is redeemed when you use it.
-3. Generating a token for a "spinoff" DAO.
-4. Generating a token that can be used to give explicit support to an action or a campaign, like polling.
-5. Generating a token to enable the token holders to collect daily, monthly or yearly payments.
-6. Generating a token to limit participation in a token sale or similar event to holders of a specific token.
-7. Generating token that allows a central party complete control to transfer/generate/destroy tokens at will.
-8. Lots of other applications including all the applications the standard ERC 20 token can be used for.
+1. Generar un token de votación que se quema cuando se vota.
+2. Generar un "cupón" de descuento que se canjea cuando se utiliza.
+3. Generación de un token para un derivado de DAO.
+4. Generación de un token que puede ser utilizado para dar apoyo explícito a una acción o campaña, como el sondeo.
+5. Generación de un token para que los titulares del token puedan cobrar los pagos diarios, mensuales o anuales.
+6. Generación de un token para limitar la participación en una venta de token o evento similar a los titulares de un token específico.
+7. Generación de tokens que permite a un grupo central control total para transferir/generar/destruir tokens a voluntad.
+8. Muchas otras aplicaciones, incluyendo todas las aplicaciones para las que se pueden utilizar el token ERC20 estándar.
 
-All these applications and more are enabled by the MiniMe Token Contract. The most amazing part being that anyone that wants to add these features can, in a permissionless yet safe manner without affecting the parent token's intended functionality.
+Todas estas aplicaciones y más están habilitadas por el contrato MiniMe token. La parte más asombrosa es que cualquiera que quiera añadir estas características puede hacerlo, de una manera segura y sin permisos sin afectar a la funcionalidad prevista del token padre.
 
-# How to deploy a campaign
+# Cómo desplegar una campaña
 
-1. Deploy the MinimeTokenFactory
-2. Deploy the MinimeToken
-3. Deploy the campaign
-4. Assign the controller of the MinimeToken to the campaign.
+1. Desplegar MiniMeTokenFactory
+2. Desplegar el MinimeToken
+3. Desplegar la campaña
+4. Asigne el controlador del MinimeToken a la campaña
 
 
